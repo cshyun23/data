@@ -1,0 +1,48 @@
+#include <iostream>
+
+using namespace std;
+
+int sfp[16] = { 0, };
+
+int main() {
+
+	float a;
+	unsigned long* temp;
+	int ex;
+	cin >> a;
+
+	temp = (unsigned long*)&a;
+
+	a > 0 ? sfp[0] = 0 : sfp[0] = 1;//sign부분
+
+	for (int i = 22; i >= 7; i--) {//frac부분
+		if (*temp >> i & 0x01) {
+			sfp[29 - i] = 1;
+		}
+		else {
+			sfp[29 - i] = 0;
+		}
+
+	}
+
+	int b = *temp >> 23;
+	b = b - 96;
+	
+	unsigned int* temp2;
+	temp2 = (unsigned int*)&b;
+	for (int i = 5; i >= 0; i--) {//exp부분
+		if (*temp2 >> i & 0x01) {
+			sfp[6 - i] = 1;
+		}
+		else {
+			sfp[6 - i] = 0;
+		}
+	}
+
+	for (int i = 0; i < 16; i++) {
+		cout << sfp[i];
+
+	}
+
+
+}
