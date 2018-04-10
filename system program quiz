@@ -1,3 +1,45 @@
+//first option
+#include <iostream>
+
+using namespace std;
+
+typedef unsigned short sfp;
+
+int main() {
+
+	float a;
+	unsigned int* temp;
+	unsigned short*temp3;
+	cin >> a;
+	sfp ans = 0;
+	temp3 = (unsigned short*)&ans;
+	temp = (unsigned int*)&a;
+
+	ans = ans + (*temp >> 7);
+	ans = ans >> 7;
+		
+	int b = *temp >> 23;
+	b = b - 96;
+
+	unsigned int* temp2;
+	temp2 = (unsigned int*)&b;
+	*temp2 = *temp2 << 9;
+	ans = ans + temp2[0];
+
+	if (a < 0) {
+		ans = ans | (0x01 << 15);
+	}
+
+	for (int i = 15; i >= 0; i--) {
+		if (*temp3 >> i & 0x01) { cout << "1"; }
+		else { cout << "0"; }
+	}
+
+	return 0;
+}
+
+//Second option
+
 #include <iostream>
 
 using namespace std;
@@ -46,3 +88,5 @@ int main() {
 
 
 }
+
+
