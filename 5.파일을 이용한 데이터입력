@@ -17,7 +17,7 @@ key,value = reader.read(filename_queue)//파일을 읽어올 리더를 생성
 record_defaults = [[0.],[0,],[0,],[0,]]
 xy = tf.decode_csv(value,record_defaults = record_defaults)//decode(파일에서 어떤식으로 데이터를 인식할것인가)
 
-train_x_batch, train_y_batch = | //데이터를 추출
+train_x_batch, train_y_batch = | //데이터를 추출(shuffle_batch-배치할 데이터를 섞어서 출력)
 
 coord = tf.train.Coordinator()
 threads = tf.train.start_queue_runners(sess=sess,coord=coord)
