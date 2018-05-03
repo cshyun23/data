@@ -25,3 +25,8 @@ with tf.Session() as sess:
        sess.run(optimizer, feed_dict={X: x_data, Y: y_data})
        if step % 200 == 0:
            print(step, sess.run(cost, feed_dict={X: x_data, Y: y_data}))
+
+#softmax 과정을 좀더 간단하게 풀수있는 코드
+cost_i = tf.nn.softmax_cross_entropy_with_logits(logits=logits, 
+                                                 labels=Y_one_hot)
+cost = tf.reduce_mean(cost_i)
