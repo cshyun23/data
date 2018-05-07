@@ -1,0 +1,126 @@
+#include"stdafx.h"
+#include <stdio.h>
+#include <stdlib.h>
+#define MAX_STACK_SIZE 100
+
+int top = -1;
+typedef struct {
+	short int row;
+	short int col;
+	short int dir;
+}element;
+element stack[MAX_STACK_SIZE];
+
+int push(int top, element position) {
+	if (top >= MAX_STACK_SIZE - 1) {
+		return 100;
+	}
+	top = top + 1;
+	stack[top].row = position.row;
+	stack[top].col = position.col;
+	stack[top].dir = position.dir;
+	return top;
+}
+
+element pops;
+
+int pop(int top) {
+	if (top == -1) { return -1; }
+	else {
+	pops = stack[top];
+    top = top - 1;
+	}
+		return top;
+}
+
+typedef struct {
+	short int vert;
+	short int horiz;
+} offsets;
+
+offsets move[8] = { { -1,0 },{ -1,1 },{ 0,1 },{ 1,1 },{ 1,0 },{ 1,-1 },{ 0,-1 },{ -1,-1 } };
+
+
+int map[11][15] = { { 0,1,0,0,0,0,0,0,0,0,1,1,1,1,1 },
+{ 1,0,0,0,1,1,0,1,1,1,0,0,1,1,1 },
+{ 0,1,1,0,0,0,0,1,1,1,1,0,0,1,1 },
+{ 1,1,0,1,1,1,1,0,1,1,0,1,1,0,0 },
+{ 1,1,0,1,0,0,1,0,1,1,1,1,1,0,1 },
+{ 0,0,1,1,0,1,1,1,0,1,0,0,1,0,1 },
+{ 0,1,1,1,1,0,0,1,1,0,1,1,1,1,0 },
+{ 0,0,1,1,0,1,1,0,1,1,0,1,1,0,1 },
+{ 1,1,0,0,0,1,1,0,1,1,0,0,0,0,0 },
+{ 0,0,1,1,1,1,1,0,0,0,1,1,1,1,0 },
+{ 0,1,0,0,1,1,1,1,1,0,1,1,1,1,0 } };
+
+int map2[13][17] = { 0, };
+
+void mapping(int(*map)[15], int(*map2)[17]) {
+	for (int i = 0; i < 13; i++) {
+		for (int j = 0; j < 17; j++) {
+			if (i != 0 && i != 12 && j != 0 && j != 16) { map2[i][j] = map[i - 1][j - 1];  }
+			else { map2[i][j] = 1; }
+
+		}
+	}	
+}
+
+int Algorithm_path() {
+	element position;
+	map2[1][1] = 1; top = 0; stack[0].row = 1; stack[0].col = 1; stack[0].dir = 0;
+	int row, col, dir, nextRow, nextCol;
+	int found=0;
+
+	while (top > -1 && !found) {
+		top = pop(top);
+		position = pops;
+		row = position.row; col = position.col; dir = position.dir;
+		while (dir < 8 && !found) {
+			nextRow = row + move[dir].vert; nextCol = col + move[dir].horiz;
+			if (nextRow == 11 && nextCol == 15) {
+				found = 1;
+				position.row = row; position.col = col; position.dir = ++dir;
+				top = push(top, position);
+				position.row = nextRow; position.col = nextCol; position.dir = 0;
+				top = push(top, position);
+			}
+			else if (!map[nextRow-1][nextCol-1] && !map2[nextRow][nextCol]) {
+				map2[nextRow][nextCol] = 1;
+				position.row = row; position.col = col; position.dir = ++dir;
+				top = push(top, position);
+				row = nextRow; col = nextCol; dir = 0;
+			}
+			else{				
+				++dir;
+			}
+		}
+	}
+	return top;
+}
+
+void show_stack(int top) {
+	int temp = top;
+	while (temp != -1) {		
+		temp = pop(temp);
+		printf("%d ", pops.row);
+		printf("%d ", pops.col);
+		printf("%d\n", pops.dir);
+		
+		}
+	}
+
+int main() {
+	mapping(map, map2);
+	int answer = Algorithm_path();
+
+	printf("success\n%d\n", answer);
+
+	show_stack(answer);
+
+	for (int i = 0; i < 13; i++) {
+		for (int j = 0; j < 17; j++) {
+			printf("%d", map2[i][j]);
+		}printf("\n");
+	}
+	return 0;
+}
