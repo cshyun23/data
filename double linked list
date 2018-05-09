@@ -1,0 +1,12 @@
+#include"stdafx.h"#include<stdio.h>#include<stdlib.h>#include<time.h>typedef struct list_node *linked_p;typedef struct list_node{ char data; linked_p next; linked_p before;}linked_data;linked_p head = 0;linked_p tail =0;int flag=0;
+void insert(linked_p* ins, char a) { linked_p new1; linked_p temp_new = *ins; new1 = (linked_p)malloc(sizeof(list_node)); new1->next = NULL; new1->before = NULL; new1->data = a; if (temp_new == NULL) { *ins = new1; return; } while (temp_new->next != NULL) {  temp_new = temp_new->next;  } temp_new->next = new1; new1->before = temp_new; tail = temp_new->next;}
+void del(linked_p* ins2, char b, int c) { linked_p temp_del; linked_p pp = 0; temp_del = *ins2; pp = *ins2; for (int i = 0; i < c; i++) {  if (temp_del->data == b) {   pp = temp_del;   pp->next->before = pp->before;   pp->before->next = pp->next;   temp_del = pp->next;   flag++;    free(pp);
+  }  else{   temp_del = temp_del->next;  } }}
+void print_t(int d) { linked_p temp_pri = 0; temp_pri = head; printf("Forward  : "); for (int i = 0; i < d-flag; i++) {  printf("%c  ", temp_pri->data);  temp_pri = temp_pri->next;
+ }
+ temp_pri = tail; printf("\nBackward : "); for (int i = 0; i < d-flag; i++) {  printf("%c  ", temp_pri->data);  temp_pri = temp_pri->before;
+ }
+}
+int main() { char input[] = "jklrsrtskurnj "; int number = 0; linked_p temp; int i = 0; while (input[i] != 32) {  insert(&head, input[i]);  i++;  number++; } srand(time(NULL)); char k ; k = rand() % 26 + 97; printf("Random : %c\n", k);
+ del(&head, k,number); print_t(number);
+   return 0;}
