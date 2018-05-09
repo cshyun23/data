@@ -1,0 +1,111 @@
+#include"stdafx.h"
+#include<stdio.h>
+#include<stdlib.h>
+typedef struct list_node *list_ptr;
+typedef struct list_node{ 
+int coef; 
+int degree; 
+list_ptr link;
+}poly_node;
+list_ptr ptr = 0;
+list_ptr ptr2 = 0;
+list_ptr ptr3 = 0;
+
+void Insert(list_ptr *ptr5, int coef, int degree) { 
+list_ptr new1;
+ new1 = (list_ptr)malloc(sizeof(list_node)); 
+ new1->coef = coef; 
+ new1->degree = degree; 
+ new1->link = *ptr5; *ptr5 = new1;
+}
+
+poly_node pop(list_ptr *k) { 
+list_ptr temp = 0;
+temp = *k;
+*k = temp->link;
+poly_node temp2;
+temp2 = *temp; free(temp);
+ return temp2;
+ }
+ 
+list_ptr poly_read(char poly[]) {
+int i = 0; int temp = 0; int temp2 = 0; int degree = 0; int coef = 0; list_ptr k = 0;
+ while (poly[i] != ' ') {
+ if (poly[i] == 'x') {
+ temp = i - 1;
+ while ((poly[temp] != '+' && poly[temp] != '-') && temp != -1) {
+ temp--;   
+ }
+ if (poly[temp + 1] == 'x') { coef = 1; }   
+ else {    for (int j = temp + 1; j < i; j++) {
+ coef = coef * 10 + ((int)poly[j] - 48);    
+   }   
+ }   
+ if (poly[temp] == '-') { coef *= (-1); }
+ temp2 = i + 1;   
+ while ((poly[temp2] != '+' && poly[temp2] != '-') && poly[temp2] != ' ') {
+ temp2++;   
+ }   
+ if (poly[temp2 - 1] == 'x') { degree = 1; }   
+ else {    for (int j = i + 1; j < temp2; j++) {
+ degree = degree * 10 + ((int)poly[j] - 48);   
+   } 
+ }   
+ Insert(&k, coef, degree);   coef = 0;   degree = 0;  
+ }  i++; 
+ } temp = i; 
+ while (poly[temp] != '+' && poly[temp] != '-') {  
+ temp--;
+ } for (int j = temp + 1; j < i; j++) { 
+ coef = coef * 10 + ((int)poly[j] - 48); } if (poly[temp] == '-') { coef *= (-1); } Insert(&k, coef, 0);
+ return k;
+ }
+ 
+ void poly_write(list_ptr* k1) { 
+ short k[20] = { 0, }; 
+ int i = 0; 
+ list_node temp;
+ temp.link = *k1; 
+ while (temp.link != 0) {  
+ temp = pop(k1);  k[i + 1] = temp.coef;  k[i] = temp.degree;  i += 2;
+ }
+ i--;
+ if (k[i] == 1) { printf("x"); } 
+ else {  printf("%dx", k[i]); } 
+ printf("%d", k[i - 1]); char k2 = '+'; for (int j = i - 2; j >= 0; j -= 2) {  
+ if (k[j] < 0) { k2 = '-'; k[j] = k[j] * (-1); }  if (k[j] * k[j] == 1) {   
+ printf("%c", k2);  }  else { printf("%c%d", k2, k[j]); } 
+ if (k[j - 1] == 0) {}  
+ else if (k[j - 1] == 1) { printf("x"); }  
+ else { printf("x%d", k[j - 1]); }  k2 = '+'; }
+ printf("\n");}
+  
+void poly_add(list_ptr *k1, list_ptr* k2) { 
+short a[20] = { 0, }; 
+short b[20] = { 0, }; 
+short answer[30] = { 0, }; 
+list_node temp; list_node temp2; 
+int i = 0; int j = 0; int k = 0; 
+temp.link = *k1; temp2.link = *k2; list_ptr p = 0; 
+while (temp.link != 0) {  
+temp = pop(k1);  temp2 = pop(k2); 
+a[i + 1] = temp.coef; a[i] = temp.degree; 
+b[i + 1] = temp2.coef; b[i] = temp2.degree;  i += 2; 
+}
+ i = 0; 
+ while (a[2 * i + 1] != 0 || b[2 * k + 1] != 0) {  
+ if (a[2 * i] == b[2 * k]) {   
+ answer[2 * j] = a[2 * i]; answer[2 * j + 1] = a[2 * i + 1] + b[2 * k + 1]; i++; k++;  }
+ else if (a[2 * i] > b[2 * k]) { answer[2 * j] = b[2 * k]; answer[2 * j + 1] = b[2 * i + k]; k++; }  
+ else { answer[2 * j] = a[2 * i]; answer[2 * j + 1] = a[2 * i + 1]; i++; }  j++; }
+ for (j; j >0; j--) {  Insert(&p, answer[2 * j - 1], answer[2 * j - 2]); } ptr3 = p;
+}
+
+int main() { 
+char poly[] = "5x5+7x4-3x3-x2+9 ";
+char poly2[] = "x5+7x3+2x2-x+2 "; 
+list_node temp; ptr = poly_read(poly); 
+ptr2 = poly_read(poly2); 
+poly_write(&ptr); poly_write(&ptr2);
+
+ return 0;}
