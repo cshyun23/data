@@ -1,4 +1,6 @@
 #Solving xor problem by using neural
+regression과의 차이점 : layer을 2개로 
+
 
 import tensorflow as tf
 import numpy as np
