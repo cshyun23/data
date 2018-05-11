@@ -1,0 +1,67 @@
+5 step of using tensorboard
+
+#From TF graph, decide which tensors you want to log
+with tf.variable_scope('layer1') as scope:
+tf.summary.image('input', x_image, 3)
+tf.summary.histogram("layer", L1)
+tf.summary.scalar("loss", cost)
+
+#Merge all summaries
+summary = tf.summary.merge_all()
+
+#Create writer and add graph
+writer = tf.summary.FileWriter(TB_SUMMARY_DIR)
+writer.add_graph(sess.graph)
+
+#Run summary merge and add_summary
+s, _ = sess.run([summary, optimizer], feed_dict=feed_dict)
+writer.add_summary(s, global_step=global_step)
+
+#Launch TensorBoard
+tensorboard --logdir=/tmp/mnist_logs
+
+#Histogram(multi demensinal tensors)
+with tf.variable_scope('layer1') as scope:
+   W1 = tf.get_variable("W", shape=[784, 512])
+   b1 = tf.Variable(tf.random_normal([512]))
+   L1 = tf.nn.relu(tf.matmul(X, W1) + b1)
+   L1 = tf.nn.dropout(L1, keep_prob=keep_prob)
+
+   tf.summary.histogram("X", X)
+   tf.summary.histogram("weights", W1)
+   tf.summary.histogram("bias", b1)
+   tf.summary.histogram("layer", L1)
+ 
+ #그래프 형식으로 보고싶을떄는 레이어마다 스코프를 이용하여 정리한다.
+ with tf.variable_scope('layer1') as scope:
+  W1 = tf.get_variable("W", shape=[784, 512],...
+  b1 = tf.Variable(tf.random_normal([512]))
+  L1 = tf.nn.relu(tf.matmul(X, W1) + b1)
+  L1 = tf.nn.dropout(L1, keep_prob=keep_prob)
+
+  tf.summary.histogram("X", X)
+  tf.summary.histogram("weights", W1)
+  tf.summary.histogram("bias", b1)
+  tf.summary.histogram("layer", L1)
+# Summary
+summary = tf.summary.merge_all()
+
+# initialize
+sess = tf.Session()
+sess.run(tf.global_variables_initializer())
+
+# Create summary writer
+writer = tf.summary.FileWriter(TB_SUMMARY_DIR)
+writer.add_graph(sess.graph)
+s, _ = sess.run([summary, optimizer], feed_dict=feed_dict)
+writer.add_summary(s, global_step=global_step)
+global_step += 1
+
+#실행
+riter = tf.summary.FileWriter(“/tmp/mnist_logs”)
+
+#remote server(local영역  X)
+ssh -L local_port:127.0.0.1:remote_port username@server.com
+local>  $ ssh -L 7007:127.0.0.1:6006 hunkim@server.com
+server> $ tensorboard —logdir=/tmp/mnist_logs
+http://127.0.0.1:7007(이주소로 접속하면 그래프를 볼수있음)
