@@ -1,6 +1,9 @@
 #Solving xor problem by using neural
 regression과의 차이점 : layer을 2개로 
 
+back propagation
+1.forward로 갑을 구함
+2.편미분을통해 변수가 f에 미치는 영향을 구함( chain rule 사용)
 
 import tensorflow as tf
 import numpy as np
